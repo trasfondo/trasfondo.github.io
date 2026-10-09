@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#0B0B0A">
+<title>Trasfondo</title>
+<script>(function(){var t='dark';try{var g=localStorage.getItem('trasfondo-tema');if(g==='light'||g==='dark')t=g;}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=Alegreya:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0B0A;--sup:#161615;--bd:#1F1F1D;
+  --cr:#F0EAE0;--cr2:#E4DDD3;--cr3:#D0C9BF;
+  --ve:#2C4A3E;--vc:#4A7A68;--vp:#8FB8A8;
+  --gr:#827E76;--gc:#9E9890;
+  --tx:#1F1F1D;--tx2:#4A4A47;
+  /* tokens de tema (oscuro por defecto) */
+  --ink:#F0EAE0;--read:#DAD5CB;--ink2:#C8C4BA;
+  --surf:#161615;--line:#2A2A27;--card:#1B1B19;--ac:#8FB8A8;
+  --hair:rgba(255,255,255,.07);--num:rgba(255,255,255,.09);--selbg:#0D1F1A;
+  --navbg:rgba(11,11,10,.93);--ovl:rgba(11,11,10,.96);--tint:rgba(143,184,168,.08);
+  --f:'Fraunces',Georgia,serif;
+  --b:'Alegreya',Georgia,serif;
+  --u:'Inter',system-ui,sans-serif;
+  color-scheme:dark;
+}
+html[data-theme="light"]{
+  --bg:#F0EAE0;--sup:#E4DDD3;--bd:#D0C9BF;
+  --gr:#5F5C55;--gc:#57544E;--vc:#3A6354;
+  --ink:#1F1F1D;--read:#1F1F1D;--ink2:#4A4A47;
+  --surf:#E4DDD3;--line:#D0C9BF;--card:#FFFFFF;--ac:#2C4A3E;
+  --hair:rgba(0,0,0,.07);--num:rgba(0,0,0,.10);--selbg:#DCE8E1;
+  --navbg:rgba(240,234,224,.93);--ovl:rgba(240,234,224,.96);--tint:rgba(44,74,62,.06);
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:17px;-webkit-text-size-adjust:100%;}
+body{font-family:var(--b);background:var(--bg);color:var(--ink);overflow-x:hidden;}
+::selection{background:var(--ve);color:var(--cr);}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;left:0;height:2px;width:0;background:var(--vc);z-index:999;transition:width .1s linear;display:none;}
+
+/* ── NAV ── */
+#nav{position:sticky;top:0;z-index:300;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;transition:background .25s,border-color .25s;border-bottom:1px solid transparent;}
+.nd,.nl{background:var(--navbg);backdrop-filter:blur(10px);border-color:var(--bd)!important;}
+.logo{font-family:var(--f);font-size:1.1rem;font-weight:700;cursor:pointer;letter-spacing:-.01em;color:var(--ink);}
+.hbg{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:4px;}
+.hbg b{display:block;width:20px;height:1.5px;background:var(--gr);}
+
+/* ── MENÚ ── */
+#menu{position:fixed;inset:0;background:var(--bg);z-index:500;display:none;flex-direction:column;padding:0 22px 30px;overflow-y:auto;}
+#menu.open{display:flex;}
+.mt{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--bd);margin-bottom:22px;}
+.ml{font-family:var(--f);font-size:1.1rem;font-weight:700;color:var(--ink);}
+.mc{background:none;border:none;color:var(--gr);font-size:1.3rem;cursor:pointer;}
+.mn{font-family:var(--f);font-size:2rem;font-weight:700;color:var(--ink);padding:11px 0;border-bottom:1px solid var(--bd);cursor:pointer;line-height:1;}
+.mn:hover{color:var(--ac);}
+.ms{margin-top:20px;}
+.msl{font-family:var(--u);font-size:.62rem;color:var(--gr);letter-spacing:.07em;margin-bottom:10px;}
+.pills{display:flex;gap:5px;flex-wrap:wrap;}
+.pill{font-family:var(--u);font-size:.68rem;border:1px solid var(--ve);color:var(--ac);border-radius:100px;padding:4px 10px;cursor:pointer;transition:background .15s,color .15s;}
+.pill:hover,.pill.act{background:var(--ve);color:var(--cr);}
+
+/* ── MODAL GAMIFICACIÓN ── */
+#gmodal{position:fixed;inset:0;background:var(--ovl);z-index:600;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
+#gmodal.open{display:flex;}
+.gpanel{background:var(--bg);border:1px solid var(--ve);border-radius:10px;padding:24px 20px;max-width:520px;width:100%;position:relative;}
+.gclose{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--gr);font-size:1.2rem;cursor:pointer;}
+.glbl{font-family:var(--u);font-size:.6rem;color:var(--vc);letter-spacing:.08em;margin-bottom:10px;}
+.gq{font-family:var(--f);font-size:1.2rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:8px;}
+.gnota{font-family:var(--b);font-size:.85rem;color:var(--gc);font-style:italic;line-height:1.5;margin-bottom:18px;}
+.gopcs{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
+.gopc{background:var(--sup);border:1px solid var(--bd);border-radius:7px;padding:13px 15px;cursor:pointer;text-align:left;color:var(--ink);font-family:var(--b);font-size:.95rem;line-height:1.5;transition:border-color .2s,background .2s;}
+.gopc:hover,.gopc.sel{border-color:var(--ac);background:var(--selbg);}
+.gopc-l{font-family:var(--u);font-size:.58rem;color:var(--vc);letter-spacing:.08em;display:block;margin-bottom:4px;}
+#gbtn{display:none;width:100%;background:var(--ve);color:var(--cr);border:none;border-radius:5px;padding:12px;font-family:var(--u);font-size:.78rem;letter-spacing:.04em;cursor:pointer;}
+#gbtn.vis{display:block;}
+#gres{display:none;}
+#gres.vis{display:block;}
+.gres-t{font-family:var(--f);font-size:1.1rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:10px;}
+.gres-p{font-family:var(--b);font-size:.93rem;color:var(--ink2);line-height:1.75;margin-bottom:12px;}
+.gres-ft{font-family:var(--u);font-size:.72rem;color:var(--gr);font-style:italic;line-height:1.6;}
+.gdiv{height:1px;background:var(--bd);margin:14px 0;}
+.greinicio{width:100%;background:transparent;border:1px solid var(--bd);color:var(--gr);border-radius:5px;padding:9px;font-family:var(--u);font-size:.75rem;cursor:pointer;margin-top:12px;}
+.gcontinuar{width:100%;background:var(--ve);color:var(--cr);border:none;border-radius:5px;padding:9px;font-family:var(--u);font-size:.75rem;cursor:pointer;margin-top:6px;}
+
+/* ── VISTAS ── */
+.view{display:none;}
+.view.act{display:block;}
+
+/* ══ HOME ══ */
+#home{background:var(--bg);}
+.ed{font-family:var(--u);font-size:.62rem;color:var(--gr);letter-spacing:.07em;padding:16px 20px 0;display:flex;align-items:center;gap:8px;}
+.ed::before,.ed::after{content:'';flex:1;height:1px;background:var(--bd);}
+.hero{padding:0 20px 24px;border-bottom:1px solid var(--bd);}
+.hero-img{width:calc(100% + 40px);margin-left:-20px;height:215px;background:var(--sup);margin-bottom:16px;cursor:pointer;overflow:hidden;position:relative;}
+.hero-img svg{width:100%;height:100%;}
+.htag{font-family:var(--u);font-size:.6rem;font-weight:500;color:var(--vc);letter-spacing:.08em;margin-bottom:9px;display:flex;align-items:center;gap:7px;}
+.htag::before{content:'';width:16px;height:1.5px;background:var(--vc);flex-shrink:0;}
+.hh{font-family:var(--f);font-size:1.7rem;font-weight:700;line-height:1.18;color:var(--ink);margin-bottom:9px;cursor:pointer;}
+.hl{font-family:var(--b);font-size:.93rem;color:var(--gc);line-height:1.7;margin-bottom:11px;}
+.hm{font-family:var(--u);font-size:.67rem;color:var(--gr);display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.tp{font-size:.58rem;background:rgba(44,74,62,.2);color:var(--ac);border-radius:3px;padding:2px 5px;}
+.btr{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-family:var(--u);font-size:.7rem;color:var(--vc);border:1px solid var(--ve);border-radius:4px;padding:7px 13px;cursor:pointer;transition:background .2s,color .2s;letter-spacing:.03em;}
+.btr:hover{background:var(--ve);color:var(--cr);}
+.btr svg{width:11px;height:11px;fill:currentColor;}
+.sec-h{font-family:var(--u);font-size:.6rem;color:var(--gr);letter-spacing:.06em;margin-bottom:9px;}
+.sec{padding:16px 20px 0;}
+.ai{padding:13px 20px;border-bottom:1px solid var(--bd);display:flex;gap:12px;cursor:pointer;transition:background .15s;align-items:flex-start;}
+.ai:hover{background:var(--sup);}
+.an{font-family:var(--f);font-size:1.6rem;font-weight:300;color:var(--num);line-height:1;min-width:24px;flex-shrink:0;padding-top:2px;}
+.ab{flex:1;}
+.at{font-family:var(--u);font-size:.58rem;color:var(--vc);letter-spacing:.06em;margin-bottom:3px;}
+.ah{font-family:var(--f);font-size:1rem;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:3px;}
+.am{font-family:var(--u);font-size:.63rem;color:var(--gr);}
+.ai.prox .ah{opacity:.45;}
+.ai.prox .am::before{content:'Próximamente · ';}
+.nbox{margin:16px 20px;border:1px solid var(--ve);border-radius:6px;padding:15px;}
+.nt{font-family:var(--f);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.nd2{font-family:var(--u);font-size:.7rem;color:var(--gc);line-height:1.5;margin-bottom:11px;}
+.nf{display:flex;gap:6px;flex-wrap:wrap;}
+.ni{flex:1;min-width:110px;background:var(--sup);border:1px solid var(--bd);border-radius:4px;padding:8px 11px;font-family:var(--u);font-size:.75rem;color:var(--ink);outline:none;}
+.ni::placeholder{color:var(--gr);}
+.ni:focus{border-color:var(--vc);}
+.nb{background:var(--ve);color:var(--cr);border:none;border-radius:4px;padding:8px 14px;font-family:var(--u);font-size:.72rem;cursor:pointer;white-space:nowrap;}
+.np{margin-top:10px;font-family:var(--u);font-size:.58rem;color:var(--gr);font-style:italic;}
+.np span{color:var(--vc);cursor:pointer;}
+.ft{padding:20px 20px 34px;text-align:center;border-top:1px solid var(--bd);}
+.ft.lft{border-color:var(--line);}
+.ftl{font-family:var(--f);font-size:.95rem;font-weight:700;}
+.ft.lft .ftl{color:var(--ink);}
+.ftln{width:20px;height:1.5px;background:var(--ve);margin:5px auto 8px;}
+.ftd{font-family:var(--u);font-size:.62rem;color:var(--gr);}
+
+/* ══ ARTÍCULO BASE ══ */
+.ahero{background:var(--bg);padding:26px 20px 28px;}
+.atg{font-family:var(--u);font-size:.6rem;font-weight:500;color:var(--vc);letter-spacing:.08em;margin-bottom:13px;display:flex;align-items:center;gap:7px;}
+.atg::before{content:'';width:16px;height:1.5px;background:var(--vc);flex-shrink:0;}
+.ath{font-family:var(--f);font-size:1.85rem;font-weight:700;line-height:1.15;color:var(--ink);margin-bottom:11px;}
+.atm{font-family:var(--u);font-size:.67rem;color:var(--gc);display:flex;gap:9px;flex-wrap:wrap;align-items:center;}
+.pm{padding:15px 20px;background:var(--surf);border-left:2.5px solid var(--ve);}
+.pm-l{font-family:var(--u);font-size:.6rem;font-weight:500;color:var(--ac);letter-spacing:.07em;margin-bottom:7px;}
+.pm-i{font-family:var(--b);font-size:.88rem;color:var(--ink);line-height:1.6;margin-bottom:7px;font-style:italic;}
+.pm-ul{list-style:none;}
+.pm-ul li{font-family:var(--b);font-size:.86rem;color:var(--ink2);line-height:1.6;padding:5px 0 5px 14px;border-bottom:1px solid var(--hair);position:relative;}
+.pm-ul li:last-child{border:none;}
+.pm-ul li::before{content:'—';position:absolute;left:0;color:var(--ac);font-weight:700;}
+.ab2{padding:22px 20px 0;}
+.ab2 p{font-family:var(--b);font-size:1rem;line-height:1.85;color:var(--read);margin-bottom:1.35rem;max-width:62ch;}
+.ab2 p.ld{font-size:1.06rem;font-weight:500;}
+.ab2 p.ld::first-letter{font-family:var(--f);font-size:2.9rem;font-weight:900;float:left;line-height:.85;margin-right:6px;margin-top:4px;color:var(--ac);}
+.anc{border-left:2px solid var(--ve);background:var(--tint);padding:11px 13px;margin:2px 0 20px -3px;font-family:var(--b);font-size:.9rem;color:var(--ink2);line-height:1.7;font-style:italic;}
+.eco{text-align:center;font-family:var(--f);font-size:1.05rem;font-style:italic;color:var(--ac);margin:28px 0;padding:15px 18px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);line-height:1.5;}
+.pull{border-top:2px solid var(--ve);border-bottom:1px solid var(--line);padding:15px 0;margin:26px 0;}
+.pull q{font-family:var(--f);font-size:1.25rem;font-style:italic;color:var(--read);line-height:1.4;display:block;quotes:none;}
+.pull cite{font-family:var(--u);font-size:.62rem;color:var(--gr);letter-spacing:.04em;display:block;margin-top:6px;}
+.adiv{border:none;border-top:1px solid var(--line);margin:26px 0;}
+.colo{font-family:var(--b);font-size:.93rem;font-style:italic;color:var(--gr);text-align:center;margin-bottom:20px;}
+.sig{background:var(--surf);padding:14px 20px;}
+.sigl{font-family:var(--u);font-size:.6rem;color:var(--gr);letter-spacing:.06em;margin-bottom:6px;}
+.sigh{font-family:var(--f);font-size:1.05rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:3px;cursor:pointer;}
+.sigm{font-family:var(--u);font-size:.62rem;color:var(--gr);}
+.anl{margin:16px 20px;border:1px solid var(--line);border-radius:6px;padding:14px;}
+.anlt{font-family:var(--f);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.anld{font-family:var(--b);font-size:.83rem;color:var(--gr);line-height:1.5;font-style:italic;margin-bottom:11px;}
+.anlf{display:flex;gap:6px;flex-wrap:wrap;}
+.anli{flex:1;min-width:110px;background:var(--surf);border:1px solid var(--line);border-radius:4px;padding:8px 11px;font-family:var(--u);font-size:.75rem;color:var(--ink);outline:none;}
+.anlb{background:var(--ve);color:var(--cr);border:none;border-radius:4px;padding:8px 14px;font-family:var(--u);font-size:.72rem;cursor:pointer;}
+
+/* Gamif trigger inline */
+.gtrig{background:var(--sup);border:1px solid var(--ve);border-radius:7px;padding:16px 18px;margin:6px 0 24px;}
+.gtlbl{font-family:var(--u);font-size:.6rem;color:var(--vc);letter-spacing:.07em;margin-bottom:7px;}
+.gtq{font-family:var(--f);font-size:1.1rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:7px;}
+.gtn{font-family:var(--b);font-size:.8rem;color:var(--gc);font-style:italic;margin-bottom:13px;line-height:1.5;}
+.gtbtn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--ve);color:var(--cr);border:none;border-radius:5px;padding:11px;font-family:var(--u);font-size:.75rem;letter-spacing:.04em;cursor:pointer;}
+.gtbtn svg{width:11px;height:11px;fill:currentColor;}
+
+/* Foto placeholder */
+.foto-ph{background:var(--bd);border-radius:4px;margin:20px 0;padding:14px 16px;}
+.foto-ph-label{font-family:var(--u);font-size:.62rem;color:var(--gr);font-style:italic;line-height:1.5;}
+
+/* Sección capítulo */
+.cap-titulo{font-family:var(--f);font-size:1.3rem;font-weight:700;color:var(--ink);margin:28px 0 14px;padding-top:20px;border-top:1px solid var(--line);}
+
+/* ══ AVITURISMO — path chooser ══ */
+.path-intro{padding:16px 20px;background:var(--bg);}
+.path-intro p{font-family:var(--b);font-size:.95rem;color:var(--gc);line-height:1.75;}
+.path-chooser{margin:0;padding:16px 20px 20px;background:var(--surf);border-top:2px solid var(--ve);}
+.pc-lbl{font-family:var(--u);font-size:.62rem;color:var(--ac);letter-spacing:.07em;margin-bottom:12px;}
+.pc-btns{display:flex;flex-direction:column;gap:10px;}
+.pc-btn{background:var(--card);border:1.5px solid var(--line);border-radius:7px;padding:13px 15px;cursor:pointer;text-align:left;transition:border-color .2s,background .2s;}
+.pc-btn:hover,.pc-btn.act{border-color:var(--ac);background:rgba(44,74,62,.05);}
+.pc-ico{font-size:1.1rem;margin-bottom:5px;display:block;}
+.pc-t{font-family:var(--f);font-size:1rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:3px;}
+.pc-d{font-family:var(--u);font-size:.7rem;color:var(--gr);}
+.ruta{display:none;}
+.ruta.act{display:block;}
+.ruta-back{display:flex;align-items:center;gap:6px;font-family:var(--u);font-size:.68rem;color:var(--vc);cursor:pointer;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--surf);}
+
+/* ══ QUIÉN ══ */
+#quien{background:var(--bg);}
+.qh{font-family:var(--f);font-size:1.65rem;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:12px;}
+.qp{font-family:var(--b);font-size:.97rem;color:var(--gc);line-height:1.8;}
+.qsec{padding:20px 20px;border-bottom:1px solid var(--bd);}
+.qsl{font-family:var(--u);font-size:.6rem;color:var(--gr);letter-spacing:.07em;margin-bottom:8px;}
+.qsh{font-family:var(--f);font-size:1.15rem;font-weight:700;color:var(--ink);margin-bottom:9px;}
+.qsp{font-family:var(--b);font-size:.93rem;color:var(--gc);line-height:1.8;}
+.qm{background:var(--sup);border-radius:6px;padding:13px 15px;margin-top:14px;}
+.qml{font-family:var(--u);font-size:.6rem;color:var(--vc);letter-spacing:.07em;margin-bottom:8px;}
+.qmi{display:flex;gap:8px;margin-bottom:7px;align-items:flex-start;}
+.qmn{font-family:var(--f);font-size:.9rem;font-weight:700;color:var(--vc);min-width:20px;}
+.qmt{font-family:var(--b);font-size:.87rem;color:var(--gc);line-height:1.6;}
+.qc{padding:18px 20px;display:flex;gap:8px;flex-wrap:wrap;}
+.qcb{flex:1;text-align:center;border:1px solid var(--ve);color:var(--ac);border-radius:4px;padding:9px;font-family:var(--u);font-size:.7rem;cursor:pointer;transition:background .2s,color .2s;min-width:90px;}
+.qcb:hover{background:var(--ve);color:var(--cr);}
+
+/* ══ NEWSLETTER ══ */
+#nlview{background:var(--bg);}
+.nvh{background:var(--bg);padding:26px 20px 22px;}
+.nvhh{font-family:var(--f);font-size:1.45rem;font-weight:700;color:var(--ink);margin-bottom:7px;}
+.nvhd{font-family:var(--b);font-size:.93rem;color:var(--gc);line-height:1.75;}
+.nvf{padding:18px 20px;background:var(--surf);}
+.nvft{font-family:var(--f);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:5px;}
+.nvfd{font-family:var(--b);font-size:.84rem;color:var(--gr);font-style:italic;margin-bottom:12px;line-height:1.5;}
+.nvff{display:flex;gap:6px;flex-wrap:wrap;}
+.nvfi{flex:1;min-width:110px;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:8px 11px;font-family:var(--u);font-size:.75rem;color:var(--ink);outline:none;}
+.nvfb{background:var(--ve);color:var(--cr);border:none;border-radius:4px;padding:8px 14px;font-family:var(--u);font-size:.72rem;cursor:pointer;white-space:nowrap;}
+.nvedl{font-family:var(--u);font-size:.6rem;color:var(--gr);letter-spacing:.07em;padding:18px 20px 8px;display:flex;align-items:center;gap:8px;}
+.nvedl::after{content:'';flex:1;height:1px;background:var(--line);}
+.nvc{background:var(--surf);border-radius:6px;padding:14px 16px;margin:0 20px 12px;border-left:2px solid var(--ve);}
+.nvct{font-family:var(--f);font-size:1.1rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:6px;}
+.nvcp{font-family:var(--b);font-size:.87rem;color:var(--ink2);line-height:1.7;}
+.nvcc{margin-top:9px;font-family:var(--u);font-size:.65rem;color:var(--ac);cursor:pointer;}
+
+/* ── BOTÓN DE TEMA ── */
+.nav-r{display:flex;align-items:center;gap:12px;}
+.tgl{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--vc);color:var(--ac);border-radius:100px;padding:6px 12px;min-height:34px;font-family:var(--u);font-size:.68rem;font-weight:500;letter-spacing:.03em;cursor:pointer;transition:background .2s,color .2s;}
+.tgl:hover,.tgl:focus-visible{background:var(--ve);color:#F0EAE0;outline:none;}
+.tgl svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.tgl .i-moon{display:none;}
+html[data-theme="light"] .tgl .i-sun{display:none;}
+html[data-theme="light"] .tgl .i-moon{display:inline;}
+
+/* ── ajustes de especificidad dentro de .ab2 y bloque de audio ── */
+.ab2 p.eco{font-family:var(--f);font-size:1.05rem;font-style:italic;color:var(--ac);margin:28px 0;max-width:none;line-height:1.5;}
+.ab2 p.gtlbl{font-family:var(--u);font-size:.6rem;color:var(--ac);letter-spacing:.07em;line-height:1.4;margin-bottom:7px;max-width:none;}
+.ab2 p.gtq{font-family:var(--f);font-size:1.1rem;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:7px;max-width:none;}
+.ab2 p.gtn{font-family:var(--b);font-size:.85rem;color:var(--gc);font-style:italic;line-height:1.5;margin-bottom:13px;max-width:none;}
+.ab2 p.foto-ph-label{font-family:var(--u);font-size:.62rem;color:var(--gr);font-style:italic;line-height:1.5;margin:0;max-width:none;}
+.aud{border-left:2.5px solid var(--ve);background:var(--surf);padding:12px 14px;margin:6px 0 24px;border-radius:0 4px 4px 0;}
+.aud[hidden]{display:none;}
+.ab2 p.aud-l{font-family:var(--u);font-size:.6rem;color:var(--ac);letter-spacing:.07em;line-height:1.4;margin-bottom:5px;max-width:none;}
+.ab2 p.aud-t{font-family:var(--b);font-size:.9rem;color:var(--ink2);line-height:1.5;margin-bottom:9px;max-width:none;}
+.aud audio{width:100%;height:36px;display:block;}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+
+<!-- MODAL GAMIFICACIÓN -->
+<div id="gmodal" role="dialog" aria-modal="true" aria-label="Decisión interactiva">
+<div class="gpanel">
+  <button class="gclose" onclick="cerrarModal()" aria-label="Cerrar">✕</button>
+  <div id="gpregunta">
+    <p class="glbl">Pausa · Una decisión antes de seguir</p>
+    <p class="gq">Si mañana fueras responsable de la reconstrucción del Chocó, ¿por dónde empezarías?</p>
+    <p class="gnota">Elige una opción. Verás qué dijeron la gobernadora y el alcalde.</p>
+    <div class="gopcs">
+      <button class="gopc" onclick="selOpc(this,'agua')"><span class="gopc-l">Opción A</span>Garantizar acceso a agua potable para las familias afectadas</button>
+      <button class="gopc" onclick="selOpc(this,'terrenos')"><span class="gopc-l">Opción B</span>Conseguir terrenos disponibles para empezar a construir casas</button>
+      <button class="gopc" onclick="selOpc(this,'laderas')"><span class="gopc-l">Opción C</span>Llevar maquinaria y personal técnico para estabilizar laderas y demoler lo que amenaza con caer</button>
+    </div>
+    <button id="gbtn" onclick="mostrarRespuesta()">Ver qué dice la realidad →</button>
+  </div>
+  <div id="gres">
+    <p class="glbl">Tu elección</p>
+    <h3 class="gres-t" id="gres-t"></h3>
+    <p class="gres-p" id="gres-p"></p>
+    <div class="gdiv"></div>
+    <p class="gres-ft" id="gres-ft"></p>
+    <button class="greinicio" onclick="reiniciarModal()">← Elegir otra vez</button>
+    <button class="gcontinuar" onclick="cerrarModal()">Continuar leyendo →</button>
+  </div>
+</div>
+</div>
+
+<!-- MENÚ -->
+<div id="menu" role="dialog" aria-modal="true" aria-label="Menú">
+  <div class="mt"><span class="ml">TRASFONDO</span><button class="mc" onclick="cm()" aria-label="Cerrar">✕</button></div>
+  <div class="mn" onclick="ir('home');cm();">Piezas</div>
+  <div class="mn" onclick="ir('nlview');cm();">Newsletter</div>
+  <div class="mn" onclick="ir('quien');cm();">Quién</div>
+  <div class="ms"><p class="msl">Por comunidad</p>
+    <div class="pills">
+      <span class="pill" onclick="ir('home');cm();">Sistemas complejos</span>
+      <span class="pill" onclick="ir('home');cm();">Humanidades críticas</span>
+      <span class="pill" onclick="ir('home');cm();">Ciencia y decisión</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav" class="nd">
+  <span class="logo" onclick="ir('home')">TRASFONDO</span>
+  <div class="nav-r">
+    <button id="tgl" class="tgl" onclick="toggleTema()" aria-pressed="false" aria-label="Cambiar a modo claro">
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <span id="tgl-t">Claro</span>
+    </button>
+    <button class="hbg" onclick="am()" aria-label="Menú"><b></b><b></b><b></b></button>
+  </div>
+</nav>
+
+<!-- ══════ HOME ══════ -->
+<div id="home" class="view act">
+  <p class="ed">Nº 01 · Octubre 2026</p>
+  <div class="hero">
+    <div class="hero-img" onclick="ir('choco')" style="cursor:pointer;">
+      <svg viewBox="0 0 400 215" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs><radialGradient id="rg" cx="50%" cy="55%" r="65%"><stop offset="0%" stop-color="#0F2820" stop-opacity=".95"/><stop offset="100%" stop-color="#0B0B0A"/></radialGradient></defs>
+        <rect width="400" height="215" fill="#0B0B0A"/>
+        <ellipse cx="200" cy="115" rx="168" ry="102" fill="url(#rg)"/>
+        <g opacity=".07"><circle cx="200" cy="115" r="182" fill="none" stroke="#4A7A68" stroke-width=".5"/><circle cx="200" cy="115" r="130" fill="none" stroke="#4A7A68" stroke-width=".5"/><circle cx="200" cy="115" r="78" fill="none" stroke="#4A7A68" stroke-width=".5"/></g>
+        <path d="M30 168 C90 92 155 72 210 102 C265 132 320 82 375 62" stroke="#2C4A3E" stroke-width="1.5" fill="none" opacity=".55"/>
+        <circle cx="210" cy="102" r="3.5" fill="#4A7A68"/><circle cx="210" cy="102" r="8" fill="none" stroke="#4A7A68" stroke-width=".5" opacity=".45"/>
+        <text x="18" y="207" font-family="Georgia,serif" font-size="7.5" fill="#3A3A38">Quibdó, Chocó · Colombia</text>
+        <text x="382" y="207" font-family="Georgia,serif" font-size="7.5" fill="#3A3A38" text-anchor="end">10 · VIII · 2026</text>
+      </svg>
+    </div>
+    <p class="htag">Sistemas complejos · 9 min</p>
+    <h1 class="hh" onclick="ir('choco')">Un vuelo humanitario para un Chocó que sigue esperando la reconstrucción</h1>
+    <p class="hl">Un vuelo de Satena llevó 3,5 toneladas de ayuda humanitaria desde Bogotá hasta Quibdó, un mes después del terremoto. La gobernadora y el alcalde explican qué falta para reconstruir.</p>
+    <div class="hm"><span>Alejandro Rodríguez Torres</span><span>·</span><span>Oct 2026</span><span class="tp">Chocó</span><span class="tp">Institucionalidad</span></div>
+    <button class="btr" onclick="ir('choco')">Leer pieza <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+  <div class="sec"><p class="sec-h">Explora por comunidad</p>
+    <div class="pills" style="padding-bottom:16px;border-bottom:1px solid var(--bd);">
+      <span class="pill">Sistemas complejos</span><span class="pill">Humanidades críticas</span><span class="pill">Ciencia y decisión</span><span class="pill">Filosofía aplicada</span>
+    </div>
+  </div>
+  <div class="ai" onclick="ir('choco')"><div class="an">01</div><div class="ab"><p class="at">Sistemas complejos</p><p class="ah">Un vuelo humanitario para un Chocó que sigue esperando la reconstrucción</p><p class="am">9 min · Oct 2026</p></div></div>
+  <div class="ai" onclick="ir('avit')"><div class="an">02</div><div class="ab"><p class="at">Humanidades críticas · Ciencia y decisión</p><p class="ah">Del boom del aviturismo a la alerta por especies amenazadas</p><p class="am">16 min · Sep 2026 · Con Jeanne Camargo · Elige tu ruta</p></div></div>
+  <div class="ai" onclick="ir('magda')"><div class="an">03</div><div class="ab"><p class="at">Humanidades críticas · Perfil</p><p class="ah">Dos centímetros le cerraron el combate. Veinticinco años le abrieron el cielo</p><p class="am">22 min · Oct 2026 · Perfil</p></div></div>
+  <div style="height:16px;"></div>
+  <div class="nbox"><p class="nt">Una pieza al mes. Un marco para leer lo que nadie explica.</p><p class="nd2">Sin publicidad. Sin algoritmo. Directo al correo cuando algo merece el tiempo.</p><div class="nf"><input class="ni" type="email" placeholder="tu@correo.com"><button class="nb">Suscribirme</button></div><p class="np">Última edición: "El Chocó que sigue esperando" · <span onclick="ir('nlview')">Ver muestra →</span></p></div>
+  <div class="ft"><span class="ftl">TRASFONDO</span><div class="ftln"></div><p class="ftd">Periodismo narrativo · Colombia · 2026</p></div>
+</div>
+
+<!-- ══════ CHOCÓ ══════ -->
+<div id="choco" class="view">
+  <div class="ahero"><p class="atg">Sistemas complejos</p><h1 class="ath">Un vuelo humanitario para un Chocó que sigue esperando la reconstrucción</h1><div class="atm"><span>Alejandro Rodríguez Torres</span><span>·</span><span>9 min</span><span>·</span><span>Oct 2026</span></div></div>
+  <div class="pm"><p class="pm-l">Qué vas a entender al terminar</p><p class="pm-i">Un vuelo de Satena llevó 3,5 toneladas de ayuda humanitaria desde Bogotá hasta Quibdó, un mes después del terremoto que golpeó al Chocó. La gobernadora Nubia Carolina Córdoba y el alcalde Rafael Bolaños explican qué falta para reconstruir un departamento donde llevar una caja de ayuda puede exigir avión, río, lancha o carretera.</p><ul class="pm-ul"><li>Por qué la cantidad de ayuda que llega al Chocó la fija el tamaño de la bodega de un avión, y qué viene después cuando el camino pasa a ser río, lancha o carretera.</li><li>Por qué hay subsidio y dinero para viviendas y, aun así, de 500 casas prometidas hay una en pie.</li><li>Qué frena la llegada de maquinaria pesada y personal técnico, que el alcalde de Quibdó considera de lo más urgente.</li></ul></div>
+  <div class="ab2">
+    <p class="ld">Eran las cinco y media de la tarde cuando el piloto de Satena por fin arrancó la aeronave, media hora tarde según el plan de vuelo. Ya era, en realidad, hora y media más tarde de todo el cronograma del día; al otro lado del viaje, el alcalde y la gobernadora del Chocó esperaban en la pista de El Caraño. El motor tosió, agarró fuerza, y ese sonido, ronco y parejo, fue lo único que templó los nervios de la misión de apoyo humanitario. Con todo lo que había pasado y todo lo que faltaba por hacer en ese paraíso verde, todavía seguían allí.</p>
+    <p>Habíamos llegado temprano. En el hangar de Satena, en El Dorado, se respira orden: entra, atornilla, aprieta; entra, aprieta. El techo azul, despintado por la lluvia, cubre una carcasa de acero que se desparrama sobre sí misma. Ninguno de esos aviones era el nuestro.</p>
+    <p>Llevar una caja de ayuda al Chocó puede exigir avión, río, lancha o carretera. Esa tarde, el primer tramo fue una espera.</p>
+    <p>A las 4:30 había llegado el piloto. Saludó, ojeó y se escondió entre sus quehaceres para escapar del paredón de preguntas de los periodistas. Y todavía no llegaba la aeronave. Alguien puso en el hangar, a todo volumen, una cumbia argentina que celebraba a gritos un triunfo ajeno. Esa espera fue una hora de congelamiento: los vientos de los cerros se entremetían en los huesos, y a más de uno lo obligó a amontonarse, igual que un pingüino en su propio polo, sobre ese témpano de asfalto.</p>
+    <p>A los quince minutos llegó, por fin, el pájaro de acero. “Aún no está cargado”, murmuró el personal, preocupado no tanto por el tiempo como por la ingeniería a ojímetro que suponía meter, sin romper el balance de la aeronave, las 3,5 toneladas de comida y apoyo. Siete hombres, con sus siete pares de manos, movían cajas de atún, chocolate, arroz, ropa de bebé, almohadas, sillas de ruedas, agua, pañales de adulto. Entre ellas, dos mecanismos de filtro para potabilizar agua de lluvia —doscientas familias cada uno, ciento cincuenta dólares la unidad— para un departamento donde, según el Dane, más de seis de cada diez habitantes no tienen acceso a una fuente segura de agua. Al final, la mitad del avión se llenó de periodistas; la otra, de colchones.</p>
+    <p>—Siempre estamos cargando apoyo humanitario con base en la capacidad del avión —dice, sin dar su nombre porque no está autorizado a hablar con medios, alguien del personal de tierra—. Todos los vuelos han sido así. Es el quinto vuelo humanitario, el de más toneladas.</p>
+    <div class="anc">Ahí está el primer límite de la ayuda al Chocó: el tamaño de la bodega. Los otros, los de la tierra, nos esperaban en Quibdó.</div>
+    <p>Por fin el motor. Por fin las nubes. Desde arriba, el trancón de la 26 en Bogotá se ve como una cadena infinita que se funde con los edificios, y da la ilusión de nacer en el mismo cerro de Monserrate. Media hora después, a las seis en punto, a seis mil metros sobre la tierra y a cuatrocientos kilómetros por hora, aparece, tímida primero, entre una playa de nubes: su majestad la selva. De nuevo la alfombra verde, de nuevo las dragas de oro y platino. Pisamos Quibdó a las 6:17 de la tarde.</p>
+    <p>Ahí ya estaban la gobernadora Nubia Carolina Córdoba, con las mismas manos abiertas un mes después recibiendo cajas, y el alcalde Rafael Bolaños, tímido frente a la masa aglutinada. El cielo ya estaba casi oscuro, y los flashes iluminaban como un túnel del que no se saldría en más de una hora. A su lado, un largiducho escolta de comunicaciones marcaba el tiempo como un relojero.</p>
+    <p>La caravana de periodistas perseguía a la gobernadora porque, después de un mes de lamentos, sin dormir y sin tiempo para mucho más que atender a su gente, se había convertido en la cara más reconocible de la emergencia.</p>
+    <div class="foto-ph"><p class="foto-ph-label">[Foto: el alcalde Rafael Bolaños y la gobernadora Nubia Carolina Córdoba.]</p></div>
+    <p>—Mantenemos las estadísticas —dice la gobernadora—: hay 32.000 viviendas que deben ser intervenidas, 5.300 para reconstrucción total y 27.000 en reparación en distintos niveles.</p>
+    <p>—¿Y en Istmina?</p>
+    <p>—Se sigue deteriorando la salud mental. Y va a ser muy importante en el marco de la recuperación.</p>
+    <p>—¿Y el enjambre?</p>
+    <p>—Lo que pasa en el departamento es que el enjambre del sismo no se ha detenido. De hecho, hoy tuvimos un sismo; los ciudadanos de Quibdó evacuaron edificaciones.</p>
+    <div class="gtrig">
+      <p class="gtlbl">Pausa · Una decisión antes de seguir</p>
+      <p class="gtq">Si mañana fueras responsable de la reconstrucción del Chocó, ¿por dónde empezarías?</p>
+      <p class="gtn">Elige una opción. Después compara con lo que dijeron la gobernadora y el alcalde.</p>
+      <button class="gtbtn" onclick="abrirModal()">Tomar la decisión antes de continuar <svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><path d="M1 5h8M5 1l4 4-4 4" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <p>La reconstrucción, dice, es la prioridad, incluso sobre la ayuda humanitaria de fondo, que seguirá llegando mes a mes, porque en el Chocó hay menos viviendas disponibles que en el resto del país: así tengan las familias el subsidio, así tengan la plata, no hay dónde comprar.</p>
+    <p>Hoy hay una primera oferta: 500 viviendas, financiadas por el grupo Argos y, entre los donantes, el cantante Nicky Jam. La primera ya está en pie, en el barrio Medrano de Quibdó. Las otras 499 dependen todavía de la gestión de los lotes.</p>
+    <p class="eco">Una hora de vuelo trajo las cajas. Las casas dependen de otro reloj.</p>
+    <p>El alcalde Bolaños toma la palabra. Quibdó sufrió casi la mitad de las afectaciones totales del departamento, señala, con viviendas que no colapsaron del todo pero que amenazan con hacerlo, laderas fracturadas que necesitan estabilizarse, ríos con sedimentos y escombros que las lluvias de las últimas semanas empeoraron. Y entonces dice qué se necesita:</p>
+    <p>—La maquinaria amarilla es de las necesidades más urgentes. Y personal técnico especializado en demoliciones.</p>
+    <p>De la zona norte, donde la comunidad, en diálogo con El Espectador, insiste un mes después en no haber visto ayuda oficial directa, solo ollas comunitarias hechas por ellos mismos, el alcalde no lo niega: dice que esa zona la atendió ACNUR, una entidad de las Naciones Unidas, por decisión tomada en la sala de crisis, y que la alcaldía, sin recursos propios para contratar ayuda humanitaria de emergencia, ha dependido casi por completo de donaciones y cooperación internacional.</p>
+    <div class="pull"><q>Ha llegado muchísima ayuda a Quibdó, pero poca ha llegado a la alcaldía oficialmente.</q><cite>Rafael Bolaños · Alcalde de Quibdó</cite></div>
+    <p>—Municipios como Medio Atrato aseguran que no tienen un fondo propio para gestión del riesgo...</p>
+    <p>—Todos tenemos —responde luego la gobernadora, y explica que todos los municipios hacen parte del sistema, que los recursos de los más pequeños son escasos y que las emergencias se traslapan: vendavales, lluvias torrenciales, deslizamientos, actores armados, todo en el mismo segmento de tiempo. Espera que el Fondo Milagro y los demás cooperantes ayuden a cerrar esa brecha.</p>
+    <p>De la logística, Córdoba habla con orgullo: a la costa Pacífica llegaron por helicóptero de la Armada, hasta Nuquí y Bahía Solano; río abajo por el Atrato, hasta el límite con Panamá, en buques de la misma Armada; por tierra donde hay carretera, por lancha donde solo hay río. El Chocó, dice, no es un departamento simple: 47.000 kilómetros cuadrados que solo se recorren por río, por mar o por aire.</p>
+    <p>—Poder llegar al territorio con ayuda que venga por medio aéreo, y después distribuirla por el mismo medio, hace la diferencia en el tiempo. Esto es un gran apoyo por parte de Satena. En una hora, que es lo que dura este avión de Bogotá a Quibdó, cambia todo.</p>
+    <p>Una hora. La misma que a nosotros, sentados entre las cajas y los colchones, se nos hizo corta.</p>
+    <p>—Usted mencionó que la reconstrucción costará cuatro billones de pesos. El Gobierno y los empresarios anunciaron tres. ¿De dónde saldrá el resto?</p>
+    <p>—Del Plan Chocó, del Fondo Milagro, de regalías, del departamento, de cooperación internacional. Lo más importante no es solamente cuánto vale, sino cuánto demora.</p>
+    <p>Y cuánto se demora el Chocó lo sabe bien: podrían ser años. Décadas. Tal vez nunca. El apoyo empieza a mermar y el riesgo real es que el país vuelva a olvidar que el Chocó existe a una hora de Bogotá.</p>
+    <p>A otro periodista le habla del ELN y el Clan del Golfo disputándose la cuenca media del río San Juan. Hasta ahora, dice, no han tenido reportes de afectaciones en las vías Quibdó-Medellín y Quibdó-Pereira, aunque admite que el riesgo de que las empresas teman llevar maquinaria “es latente” y debe mantenerse “en monitoreo”.</p>
+    <p>Del oro y el platino, responde que hoy los explota mayoritariamente la ilegalidad, y que formalizar la minería es la única manera de que las regalías se queden en el territorio: “No va a servir solamente para el Chocó, sino para toda Colombia”.</p>
+    <p>De los animales que esperan del otro lado del avión hacia Bogotá, dice que son “seres sintientes” y que hay que velar por ellos igual que por las personas.</p>
+    <p>Comunicaciones mira el reloj. Ya se deben ir.</p>
+    <p>—Solo una pregunta o dos más.</p>
+    <p>—Es que ya nos tenemos que ir —responde, sin mirarme, pero sin negarse.</p>
+    <p>Accede.</p>
+    <p>—¿Cómo ha dormido, después de un mes al frente del desastre, gobernadora?</p>
+    <p>—Poco —y estira una sonrisa antes de soltar una palabra que tiene pegada en la lengua—: Me he dado cuenta de temores que no tenía. Cuando siento un movimiento, creo que es un sismo. Y no lo vivo como ciudadana, sino como responsable de la emergencia. Así que parte de dormir poco es estar permanentemente respondiendo a emergencias. Pero, afortunadamente, avanzando bastante. Vale la pena las pocas horas de sueño si garantizamos la atención de la emergencia como debe ser.</p>
+    <div class="aud" id="aud-gob" hidden>
+      <p class="aud-l">Audio · La voz de la gobernadora</p>
+      <p class="aud-t">Escucha su respuesta sobre cómo ha dormido después de un mes al frente de la emergencia.</p>
+      <audio id="aud-el" controls preload="metadata" src="audio/gobernadora.mp3"></audio>
+    </div>
+    <p>Antes de que la noche se lo lleve, el alcalde alcanza a decir una última cosa:</p>
+    <p>—No estamos quietos.</p>
+    <div class="foto-ph"><p class="foto-ph-label">[Foto: el avión siendo descargado, con las cajas.]</p></div>
+    <p>En la bodega del avión, esperan veintidós animales enjaulados —una parte de los ochenta y cinco acumulados en las cinco operaciones humanitarias de Satena— que una fundación en Bogotá recibirá para dar en adopción. Se escuchan ladridos y maullidos desde la pista.</p>
+    <p>A las 7:40 de la noche arranca el avión de regreso, con el calor cociendo los rostros ya rosados de los periodistas. Un perro de adopción ladra sin parar, de principio a fin del vuelo. ¿Y quién no ladraría, después de seis horas encajonado y sin poderle contar a nadie del frío luminoso de Bogotá? Abajo, el camino de luces copia en las ciudades la forma de los ríos y sus caudales, un espejo del cielo, esta vez de arriba hacia abajo, un universo oscuro con luces de vida, y el resto, oscuridad, una vasta oscuridad.</p>
+    <hr class="adiv"><p class="colo">Esto es Trasfondo. Si este texto te dejó algo, el newsletter mensual tiene más.</p>
+  </div>
+  <div class="sig"><p class="sigl">Siguiente pieza</p><p class="sigh" onclick="ir('avit')">Del boom del aviturismo a la alerta por especies amenazadas</p><p class="sigm">16 min · Jeanne Camargo y Alejandro Rodríguez Torres</p></div>
+  <div class="anl"><p class="anlt">Una pieza al mes.</p><p class="anld">Sin publicidad. Sin algoritmo.</p><div class="anlf"><input class="anli" type="email" placeholder="tu@correo.com"><button class="anlb">Suscribirme</button></div></div>
+  <div class="ft lft"><span class="ftl" style="color:var(--ink)">TRASFONDO</span><div class="ftln"></div><p class="ftd">Periodismo narrativo · Colombia · 2026</p></div>
+</div>
+
+<!-- ══════ AVITURISMO ══════ -->
+<div id="avit" class="view">
+  <div class="ahero"><p class="atg">Humanidades críticas · Ciencia y decisión</p><h1 class="ath">Del boom del aviturismo a la alerta por especies amenazadas</h1><div class="atm"><span>Alejandro Rodríguez Torres y Jeanne Camargo</span><span>·</span><span>16 min</span><span>·</span><span>Sep 2026</span></div></div>
+  <div class="pm"><p class="pm-l">Qué vas a entender al terminar</p><p class="pm-i">Colombia vende el canto de sus aves al mundo mientras lucha por no perderlas. Aquí está la paradoja completa.</p><ul class="pm-ul"><li>Por qué el mismo boom que genera millones en aviturismo también documenta la crisis de las especies que lo hacen posible.</li><li>Cómo el sesgo geográfico de eBird oculta exactamente las regiones donde las aves más amenazadas habitan.</li><li>Qué diferencia a una comunidad que conserva de una que solo decora el paisaje para turistas.</li></ul></div>
+  <div class="path-intro">
+    <p>Colombia tiene 1.966 especies de aves. También tiene 139 amenazadas. Este reportaje vive entre esos dos datos y te deja elegir por dónde entrar.</p>
+  </div>
+  <!-- PATH CHOOSER -->
+  <div class="path-chooser" id="path-chooser">
+    <p class="pc-lbl">Elige una ruta de lectura</p>
+    <div class="pc-btns">
+      <button class="pc-btn" onclick="elegirRuta('cantos')"><span class="pc-ico">🦜</span><p class="pc-t">Lo que los cantos de las aves revelan sobre la verdadera salud de un país megadiverso</p><p class="pc-d">Los datos que el éxito turístico no muestra · Alejandro Rodríguez Torres</p></button>
+      <button class="pc-btn" onclick="elegirRuta('binoculares')"><span class="pc-ico">🔭</span><p class="pc-t">Con binoculares y pasión: Colombia despega como destino de avistamiento</p><p class="pc-d">El milagro económico y sus comunidades · Jeanne Nicole Lafont Jiménez</p></button>
+    </div>
+  </div>
+  <!-- RUTA CANTOS -->
+  <div id="ruta-cantos" class="ruta">
+    <div class="ruta-back" onclick="volverChooser()">← Volver y elegir otra ruta</div>
+    <div class="ahero" style="padding-top:18px;"><p class="atg">Ciencia y decisión</p><h2 class="ath" style="font-size:1.5rem;">Lo que los cantos de las aves revelan sobre la verdadera salud de un país megadiverso</h2><div class="atm"><span>Alejandro Rodríguez Torres</span></div></div>
+    <div class="ab2">
+      <p class="ld">El mapa de Colombia en eBird registra 1.966 especies de aves en 2025. Ese dato celebra el boom del aviturismo. Pero el mismo mapa, al filtrarse por las 139 especies amenazadas que documenta el Instituto Humboldt, revela parches de silencio. La base de datos del éxito turístico es también el archivo de una crisis.</p>
+      <p>"Sonidos humanos fuertes y constantes pueden percibirse como alerta, afectando el forrajeo, el canto o el descanso", advierte Juan Pablo Ríos, ornitólogo de la Florida State University. El canto que atrae a miles de observadores puede estar apagándose.</p>
+      <div class="pull"><q>Que llegue mucha gente a ver pájaros y que se generen millones de dólares no implica que las especies mejoren su estatus de conservación.</q><cite>Óscar Laverde · Doctor en ciencias biológicas, Universidad Javeriana</cite></div>
+      <p>Los registros de eBird se concentran en los Andes y el Caribe, cerca de ciudades y circuitos turísticos. La Amazonía, la Orinoquía y el Pacífico permanecen en penumbra. Las especies más escasas son, por definición, las menos reportadas.</p>
+      <p>En el bosque de San Antonio, Valle del Cauca, un siglo de transformación trajo la extinción local de aves frugívoras de gran tamaño. Su desaparición no es solo pérdida de biodiversidad: es un golpe directo a la regeneración del bosque. Sin ellas, el bosque ve comprometida su capacidad de sobrevivir y de migrar frente al cambio climático.</p>
+      <p class="eco">El verdadero avistamiento de aves no consiste solo en encontrarlas con binoculares, sino en descifrar el críptico mensaje de supervivencia que nos envían con cada ala batiente.</p>
+    </div>
+    <div class="sig"><p class="sigl">Leer también</p><p class="sigh" onclick="elegirRuta('binoculares')">Con binoculares y pasión: Colombia despega como destino de avistamiento</p><p class="sigm">El milagro económico y sus comunidades</p></div>
+  </div>
+  <!-- RUTA BINOCULARES -->
+  <div id="ruta-binoculares" class="ruta">
+    <div class="ruta-back" onclick="volverChooser()">← Volver y elegir otra ruta</div>
+    <div class="ahero" style="padding-top:18px;"><p class="atg">Humanidades críticas</p><h2 class="ath" style="font-size:1.5rem;">Con binoculares y pasión: Colombia despega como destino de avistamiento</h2><div class="atm"><span>Jeanne Nicole Lafont Jiménez</span></div></div>
+    <div class="ab2">
+      <p class="ld">Con más de 1.900 especies de aves registradas, Colombia lidera el ranking mundial de diversidad aviar. Un viajero internacional de aviturismo gasta en promedio 2.884 dólares en siete días —más del doble que un turista convencional—, y el sector genera una derrama estimada en 210.000 millones de pesos y 22.500 empleos directos e indirectos.</p>
+      <p>ProColombia y Fontur han diseñado cinco rutas nacionales para canalizar ese flujo: Ruta Norte Caribe, Andes Centrales, Andes Orientales, Andes Suroccidentales y Llanos. En el Global Big Day de 2025, Colombia ocupó el primer puesto con 1.963 avistamientos en eBird, superando a Perú y Brasil.</p>
+      <div class="pull"><q>Estamos en un punto único donde confluyen los Andes Orientales, la Orinoquía y la Amazonía. En un mismo día se puede observar un bosque montano a 2.000 metros y un bosque tropical junto al río Orteguaza.</q><cite>Jorge Muñoz · Fundador, Caquetá Birding</cite></div>
+      <p>En el Caquetá, Jorge Muñoz fundó Caquetá Birding en 2016 reclutando a estudiantes de biología de la Universidad de la Amazonia para entrenarlos como guías. Hoy varios de ellos trabajan en proyectos de conservación. El objetivo es que cada localidad cuente con un guía local que vea en las aves una oportunidad de desarrollo territorial y de paz.</p>
+      <p>Los retos son claros: mejorar la infraestructura en zonas rurales, garantizar conectividad digital y capacitar guías especializados. Pero el marco normativo avanza: la Estrategia Nacional de Conservación de Aves (ENCA 2030) y la Ley 2373 de 2024 declaran a Colombia como País de las Aves.</p>
+      <p class="eco">El aviturismo ha demostrado que la biodiversidad puede ser un activo económico que motiva la conservación. El reto es que ese incentivo sea real, no solo decorativo.</p>
+    </div>
+    <div class="sig"><p class="sigl">Leer también</p><p class="sigh" onclick="elegirRuta('cantos')">Lo que los cantos de las aves revelan sobre la verdadera salud de un país megadiverso</p><p class="sigm">Los datos que el éxito turístico no muestra</p></div>
+  </div>
+  <div class="anl"><p class="anlt">Una pieza al mes.</p><p class="anld">Sin publicidad. Sin algoritmo.</p><div class="anlf"><input class="anli" type="email" placeholder="tu@correo.com"><button class="anlb">Suscribirme</button></div></div>
+  <div class="ft lft"><span class="ftl" style="color:var(--ink)">TRASFONDO</span><div class="ftln"></div><p class="ftd">Periodismo narrativo · Colombia · 2026</p></div>
+</div>
+
+<!-- ══════ MAGDA ══════ -->
+<div id="magda" class="view">
+  <div class="ahero"><p class="atg">Humanidades críticas · Perfil</p><h1 class="ath">Dos centímetros le cerraron el combate. Veinticinco años le abrieron el cielo</h1><div class="atm"><span>Alejandro Rodríguez Torres</span><span>·</span><span>22 min</span><span>·</span><span>Oct 2026</span></div></div>
+  <div class="pm"><p class="pm-l">Qué vas a entender al terminar</p><p class="pm-i">Magda Rincón Rivera fue una de las primeras siete pilotos militares de Colombia. Hoy vuela como copiloto de Latam, después de haber pasado por una pizzería cuando el cielo dejó de responderle.</p><ul class="pm-ul"><li>Qué significa ser la primera en algo dentro de una institución que nunca fue diseñada para ti, y qué cuesta sostenerlo.</li><li>Por qué dos centímetros en un brazo pueden cerrar una puerta en la aviación, y qué revela ese detalle sobre los sistemas de selección que llamamos meritocracia.</li><li>Cómo una persona aprende a conocer el miedo sin dejarse paralizar por él, y qué tiene que ver eso con cualquier decisión que se tome bajo presión.</li></ul></div>
+  <div class="ab2">
+    <p class="ld">El avión pasaba tan bajo que parecía rozar el tejado de losas rojas del local.</p>
+    <p>Magda Rincón estaba ahí, con el delantal puesto sobre una estructura menuda, de apenas un metro con cincuenta y ocho. Tenía las manos entre mesas, masa y cuentas, y unos ojos oscuros que seguían el descenso de los Airbus de Rionegro mientras bajaban uno tras otro hacia el aeropuerto. Detrás de ella, dentro de Volare —la pizzería que montó con su esposo John en el oriente antioqueño—, olía a queso, harina y derrota. Una derrota que todavía no terminaba de acomodarse.</p>
+    <p>Esperaba una llamada de Latam Airlines. Pero no llegaría ni esa semana ni la siguiente. Tampoco al mes entrante.</p>
+    <p>Ultra Air, donde trabajaba, había comenzado a dar tumbos financieros dos meses antes, justo cuando Magda acababa de apostar por una certificación para volar un A320; una deuda que ahora cargaba en la espalda como un pecado en forma de crédito bancario. La aerolínea terminó cerrando operaciones a principios de 2023.</p>
+    <p>Magda no estaba arrepentida y nunca podría afirmarlo, dicen quienes la conocen, porque había vivido más de dos décadas en pájaros de acero y su nombre, poco conocido para el público general, estaba en los libros de historia de la aviación colombiana.</p>
+    <p>Ahora dependía de algo mucho más difícil que pilotar un avión. Esperar. El mundo apenas volvía a la vida tras el cataclismo de la pandemia. No había remedio.</p>
+    <div class="anc">De modo que mientras el sueldo desaparecía y el banco seguía ahí, puntual, sin interés por quién había sido ni quién sería después, por primera vez sentía que toda su lucha se quedaba sin alas. Lo suficiente para que una teniente coronel retirada con miles de horas, quien pasó a la historia como la primera piloto en volar un Gavilán, terminara al frente de una pizzería en Rionegro.</div>
+    <p>Seis meses duró la incertidumbre. Al otro lado de la línea estaba Diego Ospina, jefe de pilotos de Latam. “No hay vacantes”, le dijo. Ella pidió una oportunidad, y él le prometió una, pero debía prepararse y esperar. Entonces Magda y John hicieron lo que sabían hacer: trabajar. Él en el horno, ella en el mostrador.</p>
+    <p>Los aviones pasaban sobre el techo cada tanto, y Magda los seguía con la mirada como había aprendido a hacer desde niña en Duitama, cuando todavía no sabía qué era un avión más allá de una silueta que cruzaba el cielo por encima del altiplano cundiboyacense.</p>
+    <p>Perteneció al grupo de mujeres que abrió una puerta en el cielo que llevaba cerrada casi ochenta años. Ahora ninguna de esas victorias servía para convencer al teléfono de sonar.</p>
+    <p>A veces lloraba. Era un llanto que no hace ruido, que viene cansado de contenerse, domesticado por años de entrenamiento para no mostrar grietas.</p>
+    <h2 class="cap-titulo">La niña de Maribel</h2>
+    <p>Duitama, 1996. Una ciudad que entonces todavía se comportaba como pueblo: calles empedradas en el centro, frío de páramo, los mercados campesinos y la ruana boyacense. En Boyacá suelen bromear con que esa tierra solo produce curas y militares. Magda Rincón tenía dieciséis años, estudiaba en un colegio de monjas y sus opciones seguían aquel destino premonitorio: la Armada o estudiar Finanzas en Bogotá.</p>
+    <p>Maribel Rivera, su madre, había sembrado ese interés. En vacaciones, desde los nueve años, la mandaba a Cartagena, donde el tío, que servía en la Armada, y fue allí, entre las ceremonias, la etiqueta y el caché de los uniformes, que la rigidez y el servicio público condicionarían su respuesta ocho años más tarde.</p>
+    <p>A comienzos de ese año llegaron al colegio un coronel y un oficial de la Fuerza Aérea. La institución abría por primera vez en su historia un curso regular de mujeres oficiales. No administrativas. No secretarias con grado: oficiales. Con opción real de volar.</p>
+    <p>Magda escuchó eso y rememoró aquel momento en que su madre le dijo que si no salía de Duitama, no iba a ser nadie. Le pidió a sus padres el dinero de la inscripción. Su padre no la apoyó. Lo que tenían no alcanzaba.</p>
+    <p>Entonces intervino su tío.</p>
+    <p>“Magda, yo tengo la plata de la carrera de la hija mía, que ella quiere estudiar medicina. Pero a ella le faltan unos años para salir del colegio”, le dijo. “Yo se la voy a dar; voy a aportarle sus semestres en la escuela, pero usted cuando salga graduada me la tiene que regresar para que Diana, su prima, pueda estudiar”.</p>
+    <p>Magda aceptó la misión.</p>
+    <p>Viajó a Tunja a presentarse. Pruebas físicas, exámenes médicos, conocimiento. Se había preparado con un entrenador desde el colegio, corriendo los 3.200 metros con cronómetro en mano, haciendo flexiones y abdominales hasta que el cuerpo aprendió a no protestar.</p>
+    <p>En diciembre de 1996 llegó a su casa un telegrama: “Ha sido aceptada”. Debía presentarse el 13 de enero en CATAM, Bogotá, y de ahí montar un Hércules a Cali.</p>
+    <p>De novecientas mujeres en todo el país, escogieron a treinta y cuatro.</p>
+    <p>En su colegio, doce amigas se habían inscrito juntas. Una a una se fueron: algunas en los médicos, otras en los conocimientos, otras simplemente se dieron cuenta de que aquello no era lo que buscaban.</p>
+    <p>Al final, Magda se vio sola, y en ese punto ya no podía echarse atrás.</p>
+    <h2 class="cap-titulo">La serenata</h2>
+    <p>El 13 de enero de 1997, Magda llegó a CATAM con diecisiete años y una maleta. Sus padres la acompañaron hasta la puerta, pero la puerta era ya otro mundo: uno de botas lustradas, voces cortantes y aviones rugiendo sobre la madrugada.</p>
+    <p>Maribel, antes de irse, habló con el comandante de la Escuela Militar. “¡Le entrego a una niña de su casa!”, dijo con voz áspera y ruda. “Así que no le estoy trayendo aquí una persona maleducada ni nada, sino correcta en todo el aspecto de la palabra”. Y se fue.</p>
+    <p>Lo que encontró adentro Magda era una escuela de quinientos hombres que, por primera vez, recibía a treinta y cuatro mujeres. Todo el mundo tenía los ojos puestos en ellas. Pero la Fuerza Aérea todavía no terminaba de aprender a recibirlas.</p>
+    <p>Los primeros tres meses fueron de formación militar pura: instrucción de combate, polígono, historia militar, supervivencia en campo. Las llevaron cinco días a un área boscosa cerca de Cali. Les enseñaron a moverse en la selva. A Magda le gustó.</p>
+    <p>En las noches, sin embargo, afloraba la nostalgia.</p>
+    <p>No había dormido antes lejos de su casa, y en las noches el silencio del complejo militar tenía una densidad particular: era el momento en que se cumplía el pacto implícito en el que las que lloraban descargaban el diluvio contra la almohada, y las que no, pensaban en el mismo punto fijo hasta que el sueño vencía.</p>
+    <p>Magda llamaba a Maribel. Le decía que no aguantaba, que se quería ir. Mamá le daba ánimo, pero cuando el pesimismo arreciaba, fulminaba: “Usted no me va a hacer perder la plata”.</p>
+    <p>Tratando de calmar las aguas, los alféreces, los estudiantes de grados superiores, les dieron una serenata. Cantaron canciones que recordaban el tiempo y la distancia, pero que a la vez recordaban que ese esfuerzo se compartía y que no estaba sola.</p>
+    <p>—Quiero recordar esta noche / momentos que no volverán / y hacer de aquellos poemas / tristes como una oración... —tararea Magda, con una voz que se suaviza y deja entrever el eco de la joven de diecisiete años.</p>
+    <p>Eso no lo ha borrado ninguna instrucción.</p>
+    <p>Tampoco el primer dolor emocional: no estuvo cuando nació su hermano menor. Su mamá tampoco habría de acompañarla, tiempo después, a su juramento de bandera. “Es algo que me marcó”, dice Magda. Maribel cargó el mismo peso desde el otro lado: “Lo único que me quedó fue llorar”.</p>
+    <p>La primera marca corporal llegó poco después: a un superior no le gustó cómo se veía el gorrito azul sobre el cabello largo y mandó a llevarlas a peluquería. Pero en la peluquería de la base no atendían a mujeres. Solo hombres. Así que a Magda le bajaron el cabello, le sacaron patillas, la dejaron como un muchacho con piel de porcelana sin un centímetro por fuera del gorrito.</p>
+    <p>—¿En qué me metí? —se preguntó mientras apretaba sus ojos para exprimir la última lágrima que le quedaba.</p>
+    <p>Eso era lo que había. Eso y los pantalones de hombre que les entregaron al principio a todas las mujeres.</p>
+    <p>Más pronto que tarde llegó el choque entre hombres y mujeres. Al comienzo, cuando tocaba entrenamiento físico por faltas cometidas, los separaban. Y eso molestó a los compañeros: sentían que a ellas les exigían menos, que el esfuerzo no era parejo, que el curso mixto no era tan mixto como prometían. Las mujeres lo entendieron rápido. Si iban a estar ahí, debían estar bajo la misma regla: pidieron que las integraran con los hombres y que el entrenamiento físico fuera igual para todos.</p>
+    <p>Cuando empezaron a sufrir a la par, también empezó a cambiar el aire entre ellos.</p>
+    <p>En julio del 2000, ad portas de la graduación del Curso 73, el Mayor Camilo Bernal analizó en voz alta lo que pocos oficiales se atrevían a decir: “¿Por qué los hombres no hemos permitido que las mujeres adquieran el entrenamiento para desempeñarse en las actividades que tradicionalmente sólo nosotros hemos desarrollado?”. Después de refutar uno por uno los argumentos médicos que durante décadas habían servido para mantener cerradas las cabinas —el ciclo menstrual, la masa muscular, la estatura—, concluyó: “Tanto el hombre como la mujer están preparados fisiológicamente para actividades de vuelo, pero es necesario el entrenamiento de ambos con parámetros de medición exigentes e iguales”.</p>
+    <p>Lo que debía cambiar, dijo, era “la maduración del medio militar que las rodea”.</p>
+    <p>El día del juramento de bandera le pusieron un arma en la mano. A partir de ahí: formación académica, formación militar y los primeros contactos con la aviación. El anzuelo.</p>
+    <p>—Como mujer, yo quería ser militar antes que ser piloto —recuerda Magda.</p>
+    <p>Para lograrlo, debía demostrar, una y otra vez, que no estaba allí por cortesía sino por mérito. Venía de la institución, del deber, de escapar del horizonte acotado de un pueblo que olía a chocolate y pan caliente y a frío de páramo, de honrar una deuda con una prima que tenía una carrera de medicina esperando. Primero fue la necesidad de ir más lejos; los aviones vinieron después.</p>
+    <div class="foto-ph"><p class="foto-ph-label">[Foto: En las fotos de esa época aparece arrodillada en la pista, frente a la trompa de un avión de instrucción, con la placa “CADETE RINCÓN” cosida al pecho y un anillo sencillo en la mano, el único rastro de vida civil en medio del overol verde militar.]</p></div>
+    <h2 class="cap-titulo">El casete</h2>
+    <p>Cuando comenzó la instrucción de vuelo, Magda subía al avión con su instructor y volaba bien. Las maniobras salían. Los procedimientos respondían. El instructor se bajaba satisfecho.</p>
+    <p>Pero cuando llegaba el inspector de chequeo, el que decidía si seguía o no seguía, algo ocurría en la cabina de mando. Los dedos se engarrotaban en los controles. La mente se vaciaba. Era como si alguien apagara una palanca.</p>
+    <p>Su instructor fue donde la psicóloga militar y le dijo, desesperado: “Magda vuela hermoso en instrucción diaria. Pero cuando se sube al avión con el inspector de chequeo, es como si se le borrara el casete”.</p>
+    <p>Sus alas estuvieron en juego. Y con ellas, la carrera de medicina de su prima Diana.</p>
+    <p>Trabajó meses con la psicóloga. Técnicas para reconocer las señales del pánico antes de que el pánico tomara el control. Aprendió a separar el miedo real del miedo imaginado. A respirar dentro del miedo en lugar de huir de él.</p>
+    <p>El día del chequeo definitivo, se encomendó a Dios, subió al avión con el inspector, hizo los procedimientos y aterrizó.</p>
+    <p>Nadie más que el cielo supo lo que había costado lograrlo.</p>
+    <p>De las treinta y cuatro que empezaron, llegaron dieciséis a la graduación del año 2000. De ellas, “Las pioneras” del Curso 73: las primeras siete pilotos militares de Colombia. Magda era una de ellas.</p>
+    <p>Hoy, un cuarto de siglo después, las mujeres representan el 27,6 % de la Fuerza Aeroespacial Colombiana.</p>
+    <div class="foto-ph"><p class="foto-ph-label">[Foto: De izquierda a derecha: Johana Ximena Herrera Cortés, Magda Jinette Rivera Rincón, Sandra Maryam Gaitán Sisa, María Andrea Bueno Restrepo, Liliana Paola Gutiérrez Vergara, Luz Stella Yépez Franco y Gladis Rocío Sánchez González, todas mirando al frente, sonriendo.]</p></div>
+    <h2 class="cap-titulo">Dos centímetros</h2>
+    <p>Cuando las graduaron en el año 2000, las siete pilotos fueron trasladadas juntas a CATAM. Las bases no estaban listas para ellas, dijo la Fuerza Aérea, y las enviaron a transporte militar.</p>
+    <p>A Magda le asignaron un Fairchild Merlin SR-26, transporte de personalidades especiales. Empezó a sumar horas. Voló misiones de interdicción aérea en las plataformas de inteligencia C-26. Movió carga, personal, hizo soberanía en zonas críticas del país. Fue acumulando una trayectoria que pocos pilotos, hombres o mujeres, podían igualar en variedad.</p>
+    <p>Dos años después de graduarse, la Fuerza Aérea evaluó la posibilidad de que las mujeres pasaran a combate. Los aviones T-27 Tucano y T-37 Tweet. Comenzaron las mediciones de cabina: ergonomía, alcance de controles, proporciones corporales.</p>
+    <p>Magda mide 1,58 metros. La más bajita del curso. La primera medición fueron las piernas para los pedales: pasó. El tronco: pasó. La cabeza: pasó. Se fue relajando. Lo último que midieron fue el brazo.</p>
+    <p>Le faltaron dos centímetros.</p>
+    <p>“No puede ser que por dos centímetros no pueda”, pensó, en medio de las bromas.</p>
+    <p>Su instructor le consiguió un cojín especial para que la altura compensara el alcance. Voló con el cojín. Pero la medida ergonómica era la medida, y ningún cojín cambia la anatomía de un brazo.</p>
+    <p>—Ahí murió mi sueño de ser piloto de combate —dice un cuarto de siglo después.</p>
+    <p>Entre las siete, la que más quería volar combate era una de sus mejores amigas. Se llamaba Johana Herrera. Johana sí cumplió los requisitos. La trasladaron a Palanquero. Se fue a volar T-37. Se fue a hacer exactamente lo que ambas habían soñado.</p>
+    <div class="pull"><q>Ahí murió mi sueño de ser piloto de combate.</q><cite>Magda Rincón Rivera · Teniente coronel (r) · Primera oficial, Latam Airlines</cite></div>
+    <p>Magda continuó en transporte. Le asignaron el CASA CN-235, más grande. Era la época del proceso de paz de Pastrana, la zona de distensión. Volaron de día y de noche, desde Bogotá y desde Villavicencio. En ese ritmo acelerado, sumó horas rápido. Para finales de 2003 ya tenía las mil horas requeridas para ascender a comandante.</p>
+    <p>Había una carrera silenciosa por ver quién de las siete llegaba primero. De su desempeño —lo sabían todas— dependía que la Fuerza Aérea decidiera abrir o cerrar los procesos de comandancia femenina. Una oficial cercana que vivió ese momento desde adentro lo recuerda con precisión: “Todo el mundo estaba esperando a ver si fallaba, si cometía un error”.</p>
+    <p>En diciembre de 2003 le avisaron a Magda que era ella.</p>
+    <p>No hubo discursos sobre la equidad de género ni coronas de laurel en el hangar. El alto mando simplemente eligió a la piloto que actuaba al milímetro. “Mientras muchas de nosotras a veces decíamos: ‘Ojalá hoy no toque misión dura’, Magda siempre tenía claro su objetivo y salía a volar”, recuerdan en el Curso 73. “¿Me van a poner este reto? Listo, no me queda grande, lo saco adelante”.</p>
+    <p>Como recompensa por su perfección, la orden del día le entregó un pasaje de destierro hacia un lugar al que, recordaría Magda, nadie quería ir.</p>
+    <div class="foto-ph"><p class="foto-ph-label">[Foto: Magda, la única mujer con uniforme en la escena y ubicada al centro del grupo, aparece junto a oficiales y personal de la Fuerza Aérea Colombiana en una plataforma al lado de una aeronave militar.]</p></div>
+    <h2 class="cap-titulo">En el “planeta rojo”</h2>
+    <p>El traslado era al Grupo Aéreo del Oriente. El GAORI. Vichada. Un punto ciego en la frontera profunda donde la institución militar ponía a prueba la resistencia de sus oficiales y donde el viento llanero parecía evaporar los privilegios de la capital.</p>
+    <p>Junto con Tres Esquinas en Caquetá, era uno de los destinos más duros. Sin señal de celular. Sin internet. Tres meses continuos en la base, quince días afuera. Mínimo tres años de permanencia para oficiales solteros.</p>
+    <p>Magda estaba soltera. Tenía veinticuatro años. Dijo que sí sin pensarlo. “Si la mandan a volar un pájaro, ella va”, esgrime su madre Maribel. Y así fue. Le asignaron el Gavilán G358, monomotor de fabricación colombiana. Fue la primera mujer en volar ese equipo para la Fuerza Aérea. Hoy ese mismo Gavilán descansa en el Museo Aeroespacial Colombiano en Bogotá, con una placa que lleva su nombre.</p>
+    <p>A la base solo llegaba un avión de logística los martes o los miércoles; cualquiera que aterrizara allí lo hacía sabiendo que su vida entera debía caber en lo estrictamente necesario dentro de una maleta de lona.</p>
+    <p>Al aterrizar, la tierra lo explicó todo: roja, encendida, con ese color que viene de tener demasiado hierro adentro. En la llanura del Vichada el sol no tiene dónde esconderse. Pega directo sobre el pastizal, sobre la pista, sobre las paredes de la base, y la tierra roja lo devuelve amplificado. En la distancia, los morichales se doblan con el viento y los chigüires cruzan la sabana a la misma hora de siempre, indiferentes a la historia bélica del país.</p>
+    <p>El Planeta Rojo. Así bautizaron ese aislamiento.</p>
+    <p>Las únicas distracciones después de la jornada laboral eran el deporte y la conversación, y nada más.</p>
+    <p>Fuera del uniforme, Magda se transformaba: sus compañeras la recuerdan como una mujer alegre, amigable, que se apuntaba sin dudarlo a escuchar música, bailar o tomarse algo para sacudirse el desierto. Pero al ponerse el overol de vuelo, su voz, habitualmente relajada y de tonos pausados, adquiría una rigidez de mando que no admitía réplicas.</p>
+    <p>En el Planeta Rojo lo que más pesaba no era el aislamiento físico. Era el silencio hacia afuera.</p>
+    <p>Nadie que la hubiera visto parapetada en esa armadura de disciplina, resistiendo sin quebrarse los golpes más duros de la vida militar, habría imaginado hasta qué punto podía dolerle la distancia de su familia. La distancia de mamá.</p>
+    <p>“Una cuando entra a la escuela militar, y más como mujer, carga con una presión psicológica invisible pero constante. Todo el mundo está pendiente de lo que haces, de lo que dices, esperando a ver si te equivocas o si flaqueas”, dijo Laura Álvarez, compañera del GAORI en esos años.</p>
+    <p>En Duitama, la espera desgastaba el ánimo. Cada vez que las noticias mencionaban un atentado contra un avión de la Fuerza Aérea, Maribel escuchaba el número de la aeronave. Si era de los mismos que volaba Magda, el corazón se le iba.</p>
+    <p>Había un solo teléfono público en la base. Las filas de día eran largas. Magda iba de noche, tipo nueve o diez. Compraba su tarjeta. Llamaba. Y cuando el Gavilán hacía las rutas hacia Puerto Carreño o Inírida, aprovechaba la espera del vuelo de regreso para llamar a casa con una ensalada de frutas.</p>
+    <p>Así se soportaban los tres meses. Luego, la ida a casa: de la base a Bogotá. De Bogotá a Duitama. Le esperaban los envueltos, las mazorcas, las arepitas de maíz de Maribel, convencida de que allá su hija aguantaba hambre. Quince días de eso. Después, el camino de vuelta: la pista de Marandúa. La tierra roja de ese llano en llamas que ya reconocía como propia.</p>
+    <p>Magda acumuló 800 horas en esa aeronave en tres años y medio, volando rutas de hasta tres horas hacia Arauca, sobre un paisaje de ríos multicolores, de cimarrones y llaneros en caballos.</p>
+    <p>No olvida la coloración anaranjada que se infla en el cielo a la hora en que Colombia todavía no ha decidido si será bélica o pacífica. Nunca lo ha visto igual en ningún otro lugar.</p>
+    <div class="foto-ph"><p class="foto-ph-label">[Foto: Magda aparece en cabina durante un vuelo en su rol como piloto del Comando Aéreo de Combate No. 3.]</p></div>
+    <h2 class="cap-titulo">La orden de vuelo decía lo de siempre</h2>
+    <p>Puerto Carreño. Regreso. Nada más.</p>
+    <p>Lo único inusual era que no tendría instructor a bordo. Era su primer vuelo de comandante del Gavilán, un logro histórico para la Fuerza Aérea.</p>
+    <p>Magda leyó el papel, hizo su lista de verificación, subió al Gavilán y despegó sobre el Vichada en la mañana del 8 de marzo de 2004. Abajo quedaba Marandúa con su tierra roja y mineral. Tenía veinticuatro años.</p>
+    <p>Aterrizó en Puerto Carreño. Cumplió la misión. Despegó de regreso.</p>
+    <p>Cuando tocó pista en el GAORI, vio el mundo de gente en medio de granadas de humo con la bandera de Colombia. Sus comandantes habían organizado la ceremonia. Disfrutó el momento con una tía y una prima. Maribel no pudo asistir. La difícil situación económica de Colombia la empujó a rebuscarse la vida en Panamá, junto con sus hijos.</p>
+    <p>Cuando el reloj dio la noche, corrió al teléfono público, compró su tarjeta y llamó a su mamá.</p>
+    <p>Estaban conectadas por un mismo llanto de línea a línea.</p>
+    <p>—Me decía que tanto sacrificio había valido la pena —recuerda Magda con la voz quebrada.</p>
+    <p>Nunca le contó a su madre todas las maduras que vivió en el cielo. Le daba pánico volar el Guaviare, donde la selva se traga la luz con árboles de más de treinta metros y un fallo equivalía a que nadie la iba a encontrar. En una ocasión el motor sí falló. Su compañera de cabina sufrió un ataque de pánico y se congeló en los mandos, con las manos engarrotadas y los ojos vacíos. “Mío el avión”, le gritó Magda. Reaccionó como pudo, destrabó los controles y viró cuarenta y cinco grados en un descenso de emergencia sin flaps para encajar el Gavilán directo en la pista del GAORI. Si caían un metro antes, no vivía para contarla. Cuando las ruedas tocaron tierra y el peligro cesó, el cuerpo pasó la factura: las piernas le temblaron de un modo tan incontrolable que fue incapaz de presionar los pedales para carretear el avión hacia el hangar.</p>
+    <p>—Por eso prefería que estuviera tranquila —dice.</p>
+    <p>Años después, cuando le echó el cuento, Maribel reaccionó exactamente como Magda había imaginado. “Sí ve, sí ve, y usted volando esos aviones viejos”, recuerda, y se ríe.</p>
+    <h2 class="cap-titulo">Johana</h2>
+    <p>Johana Herrera llegó al Curso 73 igual que Magda: sin haber visto nunca un avión de cerca, cargando la misma hambre de demostrar que podía. En cuatro años de escuela se volvieron inseparables. Compartían los nervios antes de los chequeos, las noches de estudio, las conversaciones sobre qué iban a hacer cuando tuvieran alas. Johana era directa, apasionada, dulce, con una certeza sobre lo que quería que pocas veces se ve en alguien tan joven.</p>
+    <p>Lo que quería era volar combate.</p>
+    <p>Cuando midieron los brazos y Magda quedó afuera por dos centímetros, Johana cumplió los requisitos. La trasladaron a Palanquero. Se fue a volar el T-37. Junto con Luz Stella Franco y Angie Restrepo, fueron las primeras mujeres en conquistar el aire sin instructor a bordo en febrero de 1999.</p>
+    <p>El 20 de julio de 2006, Johana participaba con el T-37 en la celebración militar en Bogotá. Era la cúspide de su carrera. Tras el éxito del desfile, la formación regresó a la base de Palanquero para la ceremonia de aterrizaje.</p>
+    <p>Antes de tocar pista, les ordenaron realizar un pull-up, una maniobra de exhibición que exige una trepada vertical brusca para romper la formación en el aire.</p>
+    <p>Durante la tensión de la trepada, la estructura no resistió la fuerza G y el plano, el ala del avión, se desprendió por completo.</p>
+    <p>Ya iban a baja altura. Johana no tuvo el tiempo ni el espacio analítico para activar el asiento eyector. Falleció junto con el teniente Hernán Ramírez.</p>
+    <p>Años antes, en una entrevista, había dicho que su anhelo era ser instructora del T-37, que quería conocer todos los campos. Cuando Magda evoca el impacto de esa ala desprendiéndose contra el suelo de Palanquero, la teniente coronel se borra. La voz se le cae en un abismo seco:</p>
+    <p>—Fue muy duro para todas.</p>
+    <p>Johana Herrera se quedó en la memoria de las Fuerzas Armadas como una de “Las pioneras”, una oficial que entregó la vida rompiendo el techo de cristal de la aviación de combate en Colombia.</p>
+    <div class="foto-ph"><p class="foto-ph-label">[Foto: Johana falleció a los 26 años el 20 de julio de 2006. En esta foto, con lentes oscuros, acompaña a Magda, quien está sentada en la cabina de una aeronave de la Fuerza Aérea Colombiana. La palabra “Rescate” pintada en el fuselaje recuerda el momento.]</p></div>
+    <h2 class="cap-titulo">El espejo del Cesar</h2>
+    <p>Había cosas que le tocaban de cerca aunque no le tocaran a ella.</p>
+    <p>En 2015, Magda estaba asignada en Barranquilla cuando avisaron de un accidente. Un avión militar CASA CN-235 cayó a tierra en el municipio de Agustín Codazzi, en el departamento del Cesar, por una falla en el motor. Se produjo a eso de las cinco de la tarde y en él perdieron la vida once militares. Como Magda estaba en la base más cercana, salió de inmediato en helicóptero. El equipo de investigación de accidentes, con ella adentro, fue el primero en llegar.</p>
+    <p>La copiloto de ese avión era una mujer.</p>
+    <p>—Nunca me había tocado ver a una mujer, una igual a mí, con mis mismos sueños, muerta en un accidente aéreo militar —dice, con los ojos mirando un punto fijo.</p>
+    <p>El impacto la sumió en un estado de shock que duró dos días. No era la cercanía con la muerte lo que había quebrado su disciplina; en veinticuatro años de servicio había aprendido a procesar los decesos en combate. Lo que la detuvo en seco fue el espejo: ver su propio uniforme, su propia silueta y su propio destino truncado en la tierra del Cesar.</p>
+    <p>Esa noche le correspondió quedarse en el perímetro del siniestro, custodiando los equipos especiales del avión destruido bajo la oscuridad, esperando que el personal forense de Bogotá llegara al amanecer para la extracción de los cuerpos. Durmió allí por órdenes del comando, cerca de los restos de la aeronave, “procesando la fragilidad de nuestra vida en el aire”.</p>
+    <p>—Ese mismo dolor, en lugar de frenarnos, nos daba más herramientas y más ganas de seguir trabajando y volando por esa Colombia que uno quiere —dice mientras reposa sus ojos oscuros en el mismo punto fijo de antes—. Siempre he dicho que en Colombia, por el conflicto, nos hemos vuelto indiferentes. Y eso no es solo de los militares.</p>
+    <div class="foto-ph"><p class="foto-ph-label">[Foto: Once militares fallecieron en el accidente de un avión CASA 235 de la Fuerza Aérea Colombiana en Codazzi, Cesar. En la imagen, investigadores forenses inspeccionan los restos de la aeronave en el sitio del siniestro.]</p></div>
+    <h2 class="cap-titulo">La silla derecha</h2>
+    <p>El celular nunca sonó. Después de despedir a sus hijos en una mañana de junio de 2023, llegó un mensaje a su correo electrónico. “Remitente: LATAM Airlines”. John, quien seguía en casa, fue el primero en enterarse de que Magda volvería a tocar el cielo. Entraron el orgullo del logro y el miedo al examen de chequeo, uno en cada hombro. Lo que vino después fueron días de evaluaciones, uno detrás de otro, con apenas tres o cuatro de diferencia. Cuando menos vio, ya portaba el uniforme.</p>
+    <p>La deuda del banco por la certificación del A320 la sostuvo con su pensión de la Fuerza Aérea y terminó de saldarla ya trabajando en la aerolínea.</p>
+    <p>Hoy continúa en LATAM como primer oficial. La silla derecha. La de copiloto.</p>
+    <p>Pasó de teniente coronel con veinticuatro años de institución a sentarse a la derecha de comandantes que a veces tienen 25 años. La psicóloga de selección de Latam se lo preguntó directamente: “¿Cómo va a manejar eso?”. Uno tiene que empezar por donde se debe empezar, respondió ella. Jamás había volado un jet comercial en línea regular. Tenía todo por aprender de quien estuviera en la silla izquierda, tuviera la edad que tuviera.</p>
+    <p>Quienes la conocen desde la Fuerza Aérea dicen que eso no sorprendió a nadie. En la institución militar aprendió desde los diecisiete años que para mandar primero hay que saber obedecer.</p>
+    <p>En los vuelos de ruta comercial, Magda es una tripulante tranquila, conversadora y de trato relajado con los auxiliares. Pero cuando se quita los audífonos y se para frente al tablero para dictar los talleres de CRM (Crew Resource Management) y Factores Humanos a los pilotos jóvenes que aspiran a ascender a comandantes, su corporalidad cambia. Su estatura de 1,58 metros se agranda y su voz recupera el metal de la oficial del GAORI.</p>
+    <p>Les pregunta a los alumnos por emergencias que se pudieran presentar. La mayoría guarda silencio; sus carreras civiles han transcurrido en la comodidad automatizada de los simuladores modernos. Entonces Magda lanza la misma pregunta de siempre:</p>
+    <p>—¿Cómo reacciona usted si lo van a robar en la calle? Transpórtelo al avión si le falla un motor. El autoconocimiento es lo único que evita que la mente se quede frizada en la cabina.</p>
+    <p>No lo dice desde un manual. Lo dice desde el Gavilán sobre el Guaviare, desde la compañera engarrotada en los controles, desde la noche en Valledupar arrimada al fuselaje destruido. Un capitán de Latam se lo dijo una vez: “Magda, cuando la veo abajo es pasiva y tranquila. Pero cuando se para en la clase y sube el tono de voz, uno dice: esta mujer sabe demasiado”.</p>
+    <p>Antes de cada chequeo suyo, incluso hoy, con más de dos décadas de vuelo encima, sigue haciendo lo que le enseñó aquella psicóloga militar: pone música de relajación la noche anterior, se acuesta temprano. Los nervios en el estómago no han desaparecido —duda que desaparezcan nunca—, pero el bloqueo, el casete que se borraba, no ha vuelto. “Si lo mío les sirve, inténtenlo, háganlo”, les dice a sus alumnos, sin pretender que su método sea el único. “No está de más”.</p>
+    <div class="pull"><q>Si lo mío les sirve, inténtenlo, háganlo. No está de más.</q><cite>Magda Rincón · Instructora CRM, Latam Airlines</cite></div>
+    <p>Sabe, sobre todo, que ese conocimiento costó demasiadas vidas como para permitir que se olvide en un aula de clase.</p>
+    <div class="foto-ph"><p class="foto-ph-label">[Foto: Magda, ya en su faceta como copiloto en la aviación comercial, aparece junto al comandante y la tripulación de auxiliares de vuelo en la cabina.]</p></div>
+    <h2 class="cap-titulo">Las estrellas</h2>
+    <p>En su fuero interno, Magda quería ser general de la República.</p>
+    <p>Era un sueño enorme: las estrellas, la cúpula, transformar cosas desde adentro. Pero sus hijos crecían. Y en la Fuerza Aérea, para ir a Panamá a ver a su mamá, tenía que tramitar permiso con cuarenta y cinco días de anticipación, sujeto a cancelación por acuartelamiento o alteración del orden público. El Estado le administraba el tiempo y la nostalgia.</p>
+    <p>“Usted no va a ser general de tres soles porque allá hay que tener mucha rosca y nosotros no la tenemos”, le dijo Maribel. Detrás de esos motivos, estaba el miedo acumulado en años: “Siempre los mandaban a lo más feo, los mandaban a lugares que eran muy peligrosos”. Cada avión que caía en las noticias era una cuenta regresiva. “Ya no más, Magdita, ya no más esta angustia, que yo ya no la aguanto más”.</p>
+    <p>Firmó su solicitud de baja en el año 2020. Lo vivió con lo que ella define como un guayabo emocional espantoso, una tusa real que le dolió en el centro del pecho. Dejaba atrás veinticuatro años de vida militar. Veinticuatro años de overoles tácticos, de visores nocturnos operando sobre la densidad de la selva, de motores que se apagaban en el aire y de vigilias fúnebres junto a fuselajes destruidos. Metió todos esos recuerdos en la misma maleta de lona con la que había salido de Duitama y se los llevó al mundo civil.</p>
+    <p>—Yo solté ese honor por los míos —dice sin arrepentimientos.</p>
+    <p>—¿Qué tuvo que soltar para estar hoy donde está?</p>
+    <p>—Nada —respondió—. Si no me equivoco, soy la única mamá de las pilotos de Latam. Las mamás no quieren tener hijos por el ritmo de vida. Pero este sueño que tanto anhelamos no puede impedir el otro sueño.</p>
+    <p>Mateo tiene doce años. Simón, nueve. En las noches que toca dormir lejos, ella aparece en videollamada revisando tareas, solucionando lo que haya que solucionar, sacando tiempo de donde no hay. Los fines de semana que puede, vuela a Rionegro para no perderse los partidos de fútbol y ponerse al día de su búnker de resistencia, la pizzería Volare.</p>
+    <p>Y cumplió la promesa con su tío. Desde que se graduó como subteniente y empezó a recibir sueldo, mes a mes abonó a la deuda. Le tomó trece años —cuatro como subteniente, cuatro como teniente, cinco como capitana— terminar de pagarle la carrera completa. Años después, a su tío le diagnosticaron cáncer de garganta. Magda le pagó antes de que falleciera, y alcanzó a agradecérselo en persona. Diana, la prima cuyo sueño era estudiar medicina, esperó por ella, terminó estudiando la carrera y ahora tiene su propia clínica en Bogotá.</p>
+    <p>El pasado Día de las Madres, Magda sintió una nostalgia que no cupo en el pecho. Llevaba años sin poder abrazar a Maribel en esa fecha. Le dijo a su esposo John y a sus niños: “vámonos”. Pusieron un tiquete y volaron a Panamá de sorpresa.</p>
+    <p>Sin tramitar permiso ante ninguna burocracia. Sin esperar 45 días. Sin pedirle permiso al mundo.</p>
+    <p>Y justo antes de cruzar la puerta del avión, como siempre, se encomendó a Dios. Le pidió que se presentara por delante de ella.</p>
+    <p>Después de tantos años mirando el cielo, por fin pudo escoger cuándo volver a casa.</p>
+    <p>Maribel abrió la puerta y se puso a llorar.</p>
+    <div class="foto-ph"><p class="foto-ph-label">[Foto: Magda, en su infancia, aparece junto a su madre Maribel.]</p></div>
+    <hr class="adiv"><p class="colo">Esto es Trasfondo. Si este texto te dejó algo, el newsletter mensual tiene más.</p>
+  </div>
+  <div class="sig"><p class="sigl">Siguiente pieza</p><p class="sigh" onclick="ir('choco')">Un vuelo humanitario para un Chocó que sigue esperando la reconstrucción</p><p class="sigm">9 min · Octubre 2026</p></div>
+  <div class="anl"><p class="anlt">Una pieza al mes.</p><p class="anld">Sin publicidad. Sin algoritmo.</p><div class="anlf"><input class="anli" type="email" placeholder="tu@correo.com"><button class="anlb">Suscribirme</button></div></div>
+  <div class="ft lft"><span class="ftl" style="color:var(--ink)">TRASFONDO</span><div class="ftln"></div><p class="ftd">Periodismo narrativo · Colombia · 2026</p></div>
+</div>
+
+<!-- ══════ QUIÉN ══════ -->
+<div id="quien" class="view">
+  <div style="padding:28px 20px 22px;border-bottom:1px solid var(--bd);">
+    <p class="atg">Quién</p>
+    <h1 class="qh">Trasfondo es periodismo narrativo con una salida cognitiva explícita.</h1>
+    <p class="qp">No "estarás mejor informado". Sino: al terminar esta pieza, puedes distinguir X de Y con más precisión de la que tenías.</p>
+  </div>
+  <div class="qsec"><p class="qsl">El periodista</p><h2 class="qsh">Alejandro Rodríguez Torres</h2><p class="qsp">Periodista en Economía de El Espectador. Cubre transporte, aviación y el análisis estructural del poder económico en Colombia. Maestrante en Periodismo y Comunicación Digital, Universidad de La Sabana. Trasfondo es su proyecto de investigación aplicada y su marca editorial personal.</p>
+    <div class="qm"><p class="qml">El método editorial</p>
+      <div class="qmi"><span class="qmn">01</span><p class="qmt"><strong>Investigación verificable.</strong> Fuentes primarias, contexto histórico. El rigor no se negocia por velocidad.</p></div>
+      <div class="qmi"><span class="qmn">02</span><p class="qmt"><strong>Arquitectura narrativa.</strong> Cada pieza tiene estructura deliberada: apertura, tensión, modelo mental, aplicación.</p></div>
+      <div class="qmi"><span class="qmn">03</span><p class="qmt"><strong>Promesa de salida explícita.</strong> Antes de leer, el lector sabe qué capacidad nueva va a adquirir.</p></div>
+    </div>
+  </div>
+  <div class="qc"><span class="qcb">Escribir</span><span class="qcb" onclick="ir('nlview')">Newsletter</span><span class="qcb">LinkedIn</span></div>
+  <div class="ft"><span class="ftl">TRASFONDO</span><div class="ftln"></div><p class="ftd">Periodismo narrativo · Colombia · 2026</p></div>
+</div>
+
+<!-- ══════ NEWSLETTER ══════ -->
+<div id="nlview" class="view">
+  <div class="nvh"><p class="atg">Newsletter</p><h1 class="nvhh">Una pieza al mes. Un marco nuevo para leer el mundo.</h1><p class="nvhd">No es un resumen de noticias. Es el contexto que los titulares no tienen espacio para dar. Sin publicidad, sin algoritmo.</p></div>
+  <div class="nvf"><p class="nvft">Suscribirme</p><p class="nvfd">Gratuito. Un correo al mes.</p><div class="nvff"><input class="nvfi" type="email" placeholder="tu@correo.com"><button class="nvfb">Suscribirme</button></div></div>
+  <p class="nvedl">Edición de muestra · Octubre 2026</p>
+  <div class="nvc"><p style="font-family:var(--u);font-size:.58rem;color:var(--gr);letter-spacing:.06em;margin-bottom:5px;">Nº 1 · Octubre 2026</p><h3 class="nvct">Por qué el Chocó no puede esperar — y por qué lo hará igual</h3><p class="nvcp">Un mes después del terremoto, la imagen que circula es la de un Estado que responde: vuelos humanitarios, gobernadora en botas de campo, cooperación internacional. Esa imagen es real. Lo que no aparece en ella es que responder a una emergencia y reconstruir un departamento son dos procesos completamente distintos, con lógicas, plazos y obstáculos incompatibles. El primer vuelo puede llegar en horas. La primera casa puede tardar años. Y no por falta de voluntad.</p><p class="nvcc" onclick="ir('choco')">Leer la pieza completa →</p></div>
+  <div class="nvc" style="opacity:.6;"><p style="font-family:var(--u);font-size:.58rem;color:var(--gr);letter-spacing:.06em;margin-bottom:5px;">Próximamente · Noviembre 2026</p><h3 class="nvct">Dos centímetros y una pizzería</h3><p class="nvcp">La historia de Magda Rincón, la primera mujer en comandar un avión militar en Colombia, y lo que el cielo nos enseña sobre los sistemas que llaman meritocracia.</p></div>
+  <div style="height:12px;"></div>
+  <div class="ft lft"><span class="ftl" style="color:var(--ink)">TRASFONDO</span><div class="ftln"></div><p class="ftd">Periodismo narrativo · Colombia · 2026</p></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const nav=$('nav');
+const modos={home:'nd',choco:'nl',avit:'nl',magda:'nl',quien:'nd',nlview:'nl'};
+let enArt=false;
+let opcSel=null;
+function aplicarTema(t){
+  document.documentElement.setAttribute('data-theme',t);
+  const claro=(t==='light'),b=$('tgl');
+  if(b){b.setAttribute('aria-pressed',claro?'true':'false');b.setAttribute('aria-label',claro?'Cambiar a modo oscuro':'Cambiar a modo claro');$('tgl-t').textContent=claro?'Oscuro':'Claro';}
+  const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',claro?'#F0EAE0':'#0B0B0A');
+}
+function toggleTema(){
+  const t=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';
+  aplicarTema(t);
+  try{localStorage.setItem('trasfondo-tema',t);}catch(e){}
+}
+aplicarTema(document.documentElement.getAttribute('data-theme')||'dark');
+const GR={
+  agua:{t:"Elegiste el agua.",p:"Según el Dane, más de seis de cada diez habitantes del Chocó no tienen acceso a una fuente segura de agua. En el avión viajaban dos filtros para potabilizar agua de lluvia: doscientas familias cada uno, ciento cincuenta dólares la unidad.",f:"La gobernadora puso la reconstrucción por encima de la ayuda humanitaria de fondo, que seguirá llegando mes a mes. ¿Quién responde para que el agua llegue sin depender de un vuelo?"},
+  terrenos:{t:"Elegiste los terrenos.",p:"Según la gobernadora, así tengan las familias el subsidio y la plata, en el Chocó no hay dónde comprar. Hoy hay una primera oferta de 500 viviendas financiadas por el grupo Argos y, entre los donantes, Nicky Jam. Una ya está en pie, en el barrio Medrano de Quibdó. Las otras 499 dependen todavía de la gestión de los lotes.",f:"Con subsidio y con plata, lo que falta son lotes. ¿A quién le corresponde gestionarlos?"},
+  laderas:{t:"Elegiste la maquinaria y las laderas.",p:"Para el alcalde Bolaños, la maquinaria amarilla y el personal técnico en demoliciones están entre las necesidades más urgentes. Quibdó concentra casi la mitad de las afectaciones del departamento, con laderas fracturadas y viviendas que amenazan con colapsar.",f:"La gobernadora admite que el riesgo de que las empresas teman llevar maquinaria “es latente”, por la disputa del ELN y el Clan del Golfo en la cuenca media del río San Juan, y dice que lo mantienen “en monitoreo”."}
+};
+
+function ir(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('act'));
+  $(v).classList.add('act');
+  nav.className=modos[v]||'nd';
+  enArt=(v==='choco'||v==='magda'||v==='avit');
+  $('prog').style.display=enArt?'block':'none';
+  if(!enArt)$('prog').style.width='0';
+  window.scrollTo({top:0}); actualizarProg();
+  if(v==='avit'){$('path-chooser').style.display='block';document.querySelectorAll('.ruta').forEach(r=>r.classList.remove('act'));}
+}
+function actualizarProg(){if(!enArt)return;const dh=document.documentElement.scrollHeight-window.innerHeight;$('prog').style.width=dh>0?Math.min(window.scrollY/dh*100,100)+'%':'0';}
+window.addEventListener('scroll',actualizarProg,{passive:true});
+function am(){$('menu').classList.add('open');document.body.style.overflow='hidden';}
+function cm(){$('menu').classList.remove('open');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){cm();cerrarModal();}});
+
+// AUDIO (aparece solo si existe audio/gobernadora.mp3)
+(function(){const a=$('aud-el'),b=$('aud-gob');if(a&&b)a.addEventListener('loadedmetadata',()=>{b.hidden=false;});})();
+
+// MODAL
+function abrirModal(){opcSel=null;$('gmodal').classList.add('open');document.body.style.overflow='hidden';document.querySelectorAll('.gopc').forEach(o=>o.classList.remove('sel'));$('gbtn').classList.remove('vis');$('gres').style.display='none';$('gpregunta').style.display='block';}
+function cerrarModal(){$('gmodal').classList.remove('open');document.body.style.overflow='';}
+function selOpc(btn,op){document.querySelectorAll('.gopc').forEach(o=>o.classList.remove('sel'));btn.classList.add('sel');opcSel=op;mostrarRespuesta();}
+function mostrarRespuesta(){if(!opcSel)return;const r=GR[opcSel];$('gres-t').textContent=r.t;$('gres-p').textContent=r.p;$('gres-ft').textContent=r.f;$('gpregunta').style.display='none';$('gres').style.display='block';}
+function reiniciarModal(){opcSel=null;document.querySelectorAll('.gopc').forEach(o=>o.classList.remove('sel'));$('gbtn').classList.remove('vis');$('gres').style.display='none';$('gpregunta').style.display='block';}
+
+// AVITURISMO paths
+function elegirRuta(r){
+  $('path-chooser').style.display='none';
+  document.querySelectorAll('.ruta').forEach(el=>el.classList.remove('act'));
+  $('ruta-'+r).classList.add('act');
+  window.scrollTo({top:0});
+}
+function volverChooser(){
+  document.querySelectorAll('.ruta').forEach(el=>el.classList.remove('act'));
+  $('path-chooser').style.display='block';
+  window.scrollTo({top:$('avit').offsetTop});
+}
+</script>
+</body>
+</html>
