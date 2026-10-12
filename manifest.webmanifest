@@ -1,0 +1,23 @@
+{
+  "name": "Trasfondo",
+  "short_name": "Trasfondo",
+  "description": "Periodismo narrativo que te dice, antes de empezar, qué vas a entender al terminar.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0B0B0A",
+  "theme_color": "#0B0B0A",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
