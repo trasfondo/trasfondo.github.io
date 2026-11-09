@@ -3413,7 +3413,7 @@ if(navLogo){function logoState(){var atTop=window.scrollY<12;navLogo.classList.t
 <script id="tf-feedback">
 (function(){
 /* URL /exec del Apps Script de comentarios (hoja «Trasfondo – Comentarios»). Si cambias de implementación, reemplázala aquí. */
-var COMENT_API=(window.TF&&TF.api)||'';
+var COMENT_API=(window.TF&&TF.api)||'https://script.google.com/macros/s/AKfycbyAzP1JuDM5OBhy-pUdCiOI4QfFuBQwBKhNdQuyWKibheIuCl7NmFin1nO2wpYJbjjabw/exec';
 var ART=['choco','magda','avit','soat','barro','migracion','pib','taxis','chocosol','chocomes','saf','videojuegos'];
 function ok(){return /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(COMENT_API)}
 function sid(){try{return localStorage.tf_sid||'anon'}catch(e){return 'anon'}}
